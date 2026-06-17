@@ -705,9 +705,10 @@ class TuyaBLEDevice:
                         )
                     except Exception:
                         self._client = None
-                        _LOGGER.exception(
-                            "%s: starting notifications failed",
+                        _LOGGER.warning(
+                            "%s: starting notifications failed, RSSI: %s",
                             self.address,
+                            self.rssi,
                         )
                         continue
                 else:
@@ -723,16 +724,17 @@ class TuyaBLEDevice:
                             True,
                         ):
                             self._client = None
-                            _LOGGER.error(
+                            _LOGGER.warning(
                                 "%s: Sending device info request failed",
                                 self.address,
                             )
                             continue
                     except Exception:
                         self._client = None
-                        _LOGGER.exception(
+                        _LOGGER.warning(
                             "%s: Sending device info request failed",
                             self.address,
+                            exc_info=True,
                         )
                         continue
                 else:
@@ -957,7 +959,7 @@ class TuyaBLEDevice:
             try:
                 await asyncio.wait_for(future, RESPONSE_WAIT_TIMEOUT)
             except TimeoutError:
-                _LOGGER.exception(
+                _LOGGER.warning(
                     "%s: timeout receiving response, RSSI: %s",
                     self.address,
                     self.rssi,
@@ -1329,8 +1331,8 @@ class TuyaBLEDevice:
         packet_num, pos = self._unpack_int(data, pos)
 
         if packet_num < self._input_expected_packet_num:
-            _LOGGER.error(
-                "%s: Unexpcted packet (number %s) in notifications, expected %s",
+            _LOGGER.warning(
+                "%s: Unexpected packet (number %s) in notifications, expected %s",
                 self.address,
                 packet_num,
                 self._input_expected_packet_num,
@@ -1345,7 +1347,7 @@ class TuyaBLEDevice:
             self._input_buffer += data[pos:]
             self._input_expected_packet_num += 1
         else:
-            _LOGGER.error(
+            _LOGGER.warning(
                 "%s: Missing packet (number %s) in notifications, received %s",
                 self.address,
                 self._input_expected_packet_num,
@@ -1355,8 +1357,8 @@ class TuyaBLEDevice:
             return
 
         if len(self._input_buffer) > self._input_expected_length:
-            _LOGGER.error(
-                "%s: Unexpcted length of data in notifications, "
+            _LOGGER.warning(
+                "%s: Unexpected length of data in notifications, "
                 "received %s expected %s",
                 self.address,
                 len(self._input_buffer),

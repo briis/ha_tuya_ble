@@ -11,7 +11,7 @@ from .manager import (
     AbstaractTuyaBLEDeviceManager,
     TuyaBLEDeviceCredentials,
 )
-from .tuya_ble import TuyaBLEDataPoint, TuyaBLEDevice
+from .tuya_ble import TuyaBLEDataPoint, TuyaBLEDevice, TuyaBLEEntityDescription
 
 __all__ = [
     "SERVICE_UUID",
@@ -20,4 +20,5 @@ __all__ = [
     "TuyaBLEDataPointType",
     "TuyaBLEDevice",
     "TuyaBLEDeviceCredentials",
+    "TuyaBLEEntityDescription",
 ]

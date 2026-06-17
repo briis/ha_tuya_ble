@@ -341,8 +341,10 @@ class TuyaBLEConfigFlow(ConfigFlow, domain=DOMAIN):
                 if (
                     discovery.address in current_addresses
                     or discovery.address in self._discovered_devices
-                    or discovery.service_data is None
-                    or SERVICE_UUID not in discovery.service_data
+                    or (
+                        SERVICE_UUID not in (discovery.service_data or {})
+                        and SERVICE_UUID not in (discovery.service_uuids or [])
+                    )
                 ):
                     continue
                 self._discovered_devices[discovery.address] = discovery

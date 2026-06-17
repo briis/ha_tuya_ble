@@ -114,8 +114,9 @@ class EnumTypeData:
     range: list[str]
 
     @classmethod
-    def from_json(cls, dpcode: DPCode, data: str) -> EnumTypeData | None:
-        """Load JSON string and return a EnumTypeData object."""
-        if not (parsed := json.loads(data)):
+    def from_json(cls, dpcode: DPCode, data: str | dict) -> EnumTypeData | None:
+        """Load JSON string or dict and return a EnumTypeData object."""
+        parsed = json.loads(data) if isinstance(data, str) else data
+        if not parsed:
             return None
         return cls(dpcode, **parsed)

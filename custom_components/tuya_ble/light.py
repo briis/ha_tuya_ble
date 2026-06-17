@@ -499,7 +499,7 @@ def get_mapping_by_device(device: TuyaBLEDevice) -> tuple[TuyaLightEntityDescrip
         if product_mapping_overrides is not None:
             return update_mapping(category_mapping, product_mapping_overrides)
 
-    return category_mapping
+    return category_mapping or ()
 
 
 class TuyaBLELight(TuyaBLEEntity, LightEntity):

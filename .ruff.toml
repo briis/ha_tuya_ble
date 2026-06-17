@@ -1,0 +1,47 @@
+# The contents of this file is based on https://github.com/home-assistant/core/blob/dev/pyproject.toml
+
+target-version = "py314"
+
+[lint]
+select = [
+    "ALL",
+]
+
+ignore = [
+    "ANN401", # Dynamically typed expressions (typing.Any) are disallowed
+    "COM812", # incompatible with formatter
+    "ISC001", # incompatible with formatter
+    "D202", # No blank lines allowed after function docstring
+    "D203", # 1 blank line required before class docstring
+    "D212", # multi-line-summary-first-line (incompatible with formatter)
+    "D213", # Multi-line docstring summary should start at the second line
+    "D404", # First word of the docstring should not be This
+    "D406", # Section name should end with a newline
+    "D407", # Section name underlining
+    "D411", # Missing blank line before section
+    "E501", # line too long
+    "E731", # do not assign a lambda expression, use a def
+]
+
+[lint.flake8-pytest-style]
+fixture-parentheses = false
+
+[lint.pyupgrade]
+keep-runtime-typing = true
+
+[lint.mccabe]
+max-complexity = 25
+
+[lint.per-file-ignores]
+"tests/**" = [
+    "S101",   # assert is the standard assertion mechanism in pytest
+    "D102",   # test methods do not require docstrings
+    "D103",   # test functions do not require docstrings
+    "D104",   # test packages do not require docstrings
+    "ANN",    # type annotations not required in test helpers
+    "FBT001", # boolean positional args are fine in test helpers
+    "FBT002", # boolean default args are fine in test helpers
+    "SLF001", # accessing private members is acceptable in tests
+    "D101",   # test classes do not require docstrings
+    "S106",   # hardcoded passwords are unavoidable in credential validation tests
+]

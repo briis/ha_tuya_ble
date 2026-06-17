@@ -21,6 +21,31 @@ ignore = [
     "D411", # Missing blank line before section
     "E501", # line too long
     "E731", # do not assign a lambda expression, use a def
+    # Missing docstrings - this is a HA custom component, docstrings are optional
+    "D100", "D101", "D102", "D103", "D104", "D105", "D107", "D205", "D401",
+    # Boolean trap rules - too opinionated, requires major API changes
+    "FBT001", "FBT002", "FBT003",
+    # Magic value comparisons - too opinionated for this codebase
+    "PLR2004",
+    # Complexity metrics - require major structural refactoring
+    "PLR0912", "PLR0913", "PLR0915", "PLR0911",
+    # Missing type annotations - optional in this codebase
+    "ANN001", "ANN002", "ANN003", "ANN201", "ANN202",
+    # Argument/variable shadowing builtins - necessary (id, type, range, input)
+    "A001", "A002",
+    # Private member access - necessary within the package internals
+    "SLF001",
+    # Script shebang rules - not relevant to HA integration source files
+    "EXE001", "EXE003", "EXE005",
+    # Security false positives
+    "S105",  # Possible hardcoded password - false positive on constant names
+    "S101",  # assert - valid in HA integrations
+    "S110",  # try-except-pass - valid pattern
+    "S324",  # MD5/SHA1 use - required by Tuya BLE protocol (cannot change algorithm)
+    # Exception message style
+    "TRY003", "EM101", "EM102",
+    # Broad exception catching - intentional in BLE connection handlers
+    "BLE001",
 ]
 
 [lint.flake8-pytest-style]

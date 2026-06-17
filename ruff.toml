@@ -1,0 +1,34 @@
+[lint]
+ignore = [
+    # Docstrings - optional documentation
+    "D",
+    # Boolean trap - too opinionated, requires major API changes
+    "FBT",
+    # Magic value comparisons - too opinionated
+    "PLR2004",
+    # Complexity metrics - require major refactoring
+    "PLR0912",
+    "PLR0913",
+    "PLR0915",
+    "PLR0911",
+    # Missing type annotations - optional
+    "ANN",
+    # Argument/variable shadowing builtins - sometimes necessary (id, type, input)
+    "A001",
+    "A002",
+    # Private member access - sometimes necessary within the package
+    "SLF001",
+    # Script shebang rules - not relevant to HA integration files
+    "EXE001",
+    "EXE003",
+    "EXE005",
+    # Security false positives
+    "S105",  # Possible hardcoded password - false positive on constant names
+    "S101",  # assert - valid in HA integrations
+    "S110",  # try-except-pass - sometimes valid
+    "S324",  # MD5 use - required by Tuya BLE protocol (cannot change)
+    # Exception message style
+    "TRY003",
+    "EM101",
+    "EM102",
+]

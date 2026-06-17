@@ -20,6 +20,7 @@ sun:
 usage_prediction:
 webhook:
 zeroconf:
+bluetooth:
 
 # https://www.home-assistant.io/integrations/homeassistant/
 homeassistant:

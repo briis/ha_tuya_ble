@@ -16,11 +16,11 @@
     "tuya"
   ],
   "documentation": "https://github.com/briis/ha_tuya_ble",
+  "iot_class": "local_push",
   "issue_tracker": "https://github.com/briis/ha_tuya_ble/issues",
   "requirements": [
     "tuya-iot-py-sdk==0.6.6",
     "pycountry>=22.3.5"
   ],
-  "iot_class": "local_push",
   "version": "2026.05.14"
 }

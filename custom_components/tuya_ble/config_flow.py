@@ -140,7 +140,10 @@ def _show_login_form(
             }
         ),
         errors=errors,
-        description_placeholders=placeholders,
+        description_placeholders={
+            "tuya_docs_url": "https://www.home-assistant.io/integrations/tuya/",
+            **placeholders,
+        },
     )
 
 

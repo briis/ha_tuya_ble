@@ -8,7 +8,7 @@
     }
   ],
   "codeowners": [
-    "briis"
+    "@briis"
   ],
   "config_flow": true,
   "dependencies": [

@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [2.1.3] — 2026-06-18
+
+### Fixed
+
+- **"Unknown error occurred" when configuring an unavailable device** — `_try_login` used a bare `next()` with no default, causing a `StopIteration` → `RuntimeError` when the stored country was a raw country code (`"DK"`) rather than a name (`"Denmark"`). Now returns an `invalid_auth` error gracefully instead of crashing.
+- **Options flow silently re-displayed the login form** when the device's integration entry was not loaded (BLE device unavailable during setup retry). Now shows an explicit *"integration not loaded — restart Home Assistant"* error.
+- **Password pre-fill** removed from the options flow cloud login form (was already fixed in the config flow in 2.1.2; now consistent in both places).
+
+### Added
+
+- **"Update method" selector in Configure dialog for manual entries** — clicking *Configure* on a manually-added device now shows a choice between *Edit credentials manually* (existing behaviour, pre-filled form) and *Fetch updated credentials from Tuya cloud* (runs the cloud login flow without needing to delete and re-add the device).
+
+---
+
 ## [2.1.2] — 2026-06-18
 
 ### Fixed
@@ -53,6 +67,7 @@ First public release of this fork, based on [airy10/ha_tuya_ble](https://github.
 
 ---
 
+[2.1.3]: https://github.com/briis/ha_tuya_ble/compare/v2.1.2...v2.1.3
 [2.1.2]: https://github.com/briis/ha_tuya_ble/compare/v2.1.1...v2.1.2
 [2.1.1]: https://github.com/briis/ha_tuya_ble/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/briis/ha_tuya_ble/releases/tag/v2.1.0

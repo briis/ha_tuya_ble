@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [2.1.2] — 2026-06-18
+
+### Fixed
+
+- Manual entry form: added helper text for the optional *Product name* and *Model* fields in all three languages, matching the descriptions already present on the required fields.
+- Cloud login form: password field no longer pre-fills from the Tuya integration credential cache, preventing confusing dots from appearing in an apparently empty field.
+
+---
+
 ## [2.1.1] — 2026-06-18
 
 ### Added
@@ -44,5 +53,6 @@ First public release of this fork.
 
 ---
 
-[2.1.1]: https://github.com/briis/ha_tuya_ble/compare/v2.1.0...HEAD
+[2.1.2]: https://github.com/briis/ha_tuya_ble/compare/v2.1.1...v2.1.2
+[2.1.1]: https://github.com/briis/ha_tuya_ble/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/briis/ha_tuya_ble/releases/tag/v2.1.0

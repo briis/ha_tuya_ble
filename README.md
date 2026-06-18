@@ -196,6 +196,12 @@ When reporting a new device, include:
 
 ---
 
+## Credits
+
+This integration is a fork of [airy10/ha_tuya_ble](https://github.com/airy10/ha_tuya_ble), which was itself forked from the original work by [PlusPlus-ua/ha_tuya_ble](https://github.com/PlusPlus-ua/ha_tuya_ble). Many thanks to both authors for building the foundation this project is based on.
+
+---
+
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.

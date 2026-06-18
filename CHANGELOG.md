@@ -33,7 +33,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [2.1.0] — 2026-06-17
 
-First public release of this fork.
+First public release of this fork, based on [airy10/ha_tuya_ble](https://github.com/airy10/ha_tuya_ble) which itself originates from [PlusPlus-ua/ha_tuya_ble](https://github.com/PlusPlus-ua/ha_tuya_ble).
 
 ### Added
 

@@ -9,7 +9,7 @@ A Home Assistant custom component (HACS integration) that adds local BLE support
 - **BLE service UUID:** `0000a201-0000-1000-8000-00805f9b34fb`
 - **Min HA version:** 2026.3.2
 - **Min HACS version:** 2.0.5
-- **HA dependency:** requires the built-in `tuya` integration to be configured
+- **HA dependency:** requires the built-in `tuya` integration to be configured (for cloud-based setup; not required for manual device entry)
 
 ## Running lint
 
@@ -56,12 +56,60 @@ These were suppressed rather than fixed because fixing them would require large 
 - **B018/B904** — removed useless expression; added `from None` to bare re-raise
 - **PLW2901/PLC0206/F601** — fixed loop variable overwrite, dict iteration pattern, duplicate dict key in `select.py`
 
+## Config flow
+
+The config flow (`config_flow.py`) has two setup paths selectable at the first step:
+
+### Cloud path (auto-discover)
+`async_step_user` → `async_step_login` → `async_step_device`
+
+The user logs in with Tuya IoT Platform credentials. HA scans for nearby BLE devices advertising the Tuya service UUID and lets the user pick one. Credentials are fetched from the cloud cache and stored in the config entry options.
+
+### Manual path
+`async_step_user` → `async_step_manual`
+
+The user enters all device credentials directly (MAC address, UUID, local key, device ID, category, product ID, and optionally product name/model). No cloud login is required. Credentials are stored directly in options, and `HASSTuyaBLEDeviceManager.get_device_credentials()` returns them immediately via the `_has_credentials()` fast-path without any cloud call.
+
+The MAC address is validated against `_MAC_RE = re.compile(r"^([0-9A-F]{2}:){5}[0-9A-F]{2}$")` and normalised to uppercase.
+
+### Options flow
+`TuyaBLEOptionsFlow.async_step_init` detects which path was used by checking whether `CONF_ACCESS_ID` is present in the entry options:
+- Cloud entries → `async_step_login` (re-authenticate with Tuya cloud)
+- Manual entries → `async_step_manual` (edit credentials form, pre-filled with current values)
+
+### Credential storage
+| Key | Source |
+|---|---|
+| `CONF_ADDRESS` | BLE MAC address (also in `entry.data`) |
+| `CONF_UUID` | Tuya device UUID |
+| `CONF_LOCAL_KEY` | BLE encryption key |
+| `CONF_DEVICE_ID` | Tuya cloud device ID |
+| `CONF_CATEGORY` | Category code (e.g. `cl`, `ms`) |
+| `CONF_PRODUCT_ID` | Product ID |
+| `CONF_DEVICE_NAME` | Display name |
+| `CONF_PRODUCT_NAME` | Product/commercial name (optional) |
+| `CONF_PRODUCT_MODEL` | Hardware model (optional) |
+
+Cloud entries additionally store login keys (`CONF_ACCESS_ID`, `CONF_ACCESS_SECRET`, `CONF_ENDPOINT`, etc.) in options. Manual entries do not.
+
+## Translations
+
+Translation files live in `translations/`. The following locales are provided:
+
+| File | Language |
+|---|---|
+| `en.json` | English (canonical) |
+| `da.json` | Danish |
+| `de.json` | German |
+
+`strings.json` is the HA-internal source file that uses `[%key:...]` references; `translations/en.json` carries the resolved English strings. Both must be kept in sync when adding new steps or fields.
+
 ## File structure
 
 ```
 custom_component/tuya_ble/
 ├── __init__.py          # Integration setup, coordinator wiring
-├── config_flow.py       # UI config flow (Tuya cloud credentials → BLE device)
+├── config_flow.py       # UI config flow — cloud discovery or manual credential entry
 ├── cloud.py             # Tuya cloud API client (credential fetching + caching)
 ├── const.py             # Domain constants, DPCode/DPType enums
 ├── devices.py           # Device database, TuyaBLEEntity base class, coordinator
@@ -78,10 +126,15 @@ custom_component/tuya_ble/
 ├── sensor.py            # Sensor platform
 ├── switch.py            # Switch platform
 ├── text.py              # Text platform (Fingerbot program sequences)
+├── strings.json         # HA-internal translation source (uses %key: references)
+├── translations/
+│   ├── en.json          # English (resolved strings, must mirror strings.json)
+│   ├── da.json          # Danish
+│   └── de.json          # German
 └── tuya_ble/            # Low-level BLE protocol library
     ├── __init__.py
     ├── tuya_ble.py      # Core BLE device class, connection management
-    └── manager.py       # Device manager dataclasses
+    └── manager.py       # Device manager dataclasses (TuyaBLEDeviceCredentials)
 ```
 
 ## Device database
@@ -95,3 +148,10 @@ Entity mappings (which DP IDs map to which HA entities) live in the per-platform
 1. Add an entry to `devices_database` in `devices.py`
 2. Add DP mappings to whichever platform files are relevant
 3. Run `bash scripts/lint` to verify no regressions
+
+## Adding a new translation step or field
+
+1. Add the new step/field to `strings.json` (use `[%key:...]` references for anything shared)
+2. Add the resolved English text to `translations/en.json`
+3. Add the translated text to `translations/da.json` and `translations/de.json`
+4. Run `bash scripts/lint` to verify no regressions

@@ -281,9 +281,16 @@
     "error": {
       "device_not_registered": "Device is not registered in Tuya cloud",
       "invalid_auth": "[%key:common::config_flow::error::invalid_auth%]",
-      "login_error": "Login error ({code}): {msg}"
+      "login_error": "Login error ({code}): {msg}",
+      "manager_unavailable": "The integration is not loaded — restart Home Assistant and try again."
     },
     "step": {
+      "init": {
+        "data": {
+          "setup_method": "[%key:config::step::user::data::setup_method%]"
+        },
+        "description": "How would you like to update this device's credentials?"
+      },
       "login": {
         "data": {
           "access_id": "Tuya IoT Access ID",

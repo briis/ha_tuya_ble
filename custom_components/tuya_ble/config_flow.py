@@ -50,8 +50,8 @@ from .const import (
     TUYA_RESPONSE_SUCCESS,
     TUYA_SMART_APP,
 )
-from .devices import TuyaBLEData, get_device_readable_name
-from .tuya_ble import SERVICE_UUID, TuyaBLEDeviceCredentials
+from .devices import get_device_readable_name
+from .tuya_ble import SERVICE_UUID
 
 if TYPE_CHECKING:
     from homeassistant.data_entry_flow import FlowHandler, FlowResult
@@ -71,10 +71,12 @@ async def _try_login(
     data: dict[str, Any]
 
     country = next(
-        country
-        for country in TUYA_COUNTRIES
-        if country.name == user_input[CONF_COUNTRY_CODE]
+        (c for c in TUYA_COUNTRIES if c.name == user_input[CONF_COUNTRY_CODE]),
+        None,
     )
+    if country is None:
+        errors["base"] = "invalid_auth"
+        return None
 
     data = {
         CONF_ENDPOINT: country.endpoint,
@@ -175,14 +177,38 @@ class TuyaBLEOptionsFlow(OptionsFlowWithConfigEntry):
     def __init__(self, config_entry: ConfigEntry) -> None:
         """Initialize options flow."""
         super().__init__(config_entry)
+        self._data: dict[str, Any] = {}
+        self._manager: HASSTuyaBLEDeviceManager | None = None
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         """Manage the options."""
-        if not self.config_entry.options.get(CONF_ACCESS_ID):
-            return await self.async_step_manual(user_input)
-        return await self.async_step_login(user_input)
+        if self.config_entry.options.get(CONF_ACCESS_ID):
+            return await self.async_step_login(user_input)
+
+        # Manual entry: offer inline edit or switch to cloud credentials.
+        if user_input is not None:
+            if user_input.get("setup_method") == "cloud":
+                if self._manager is None:
+                    self._manager = HASSTuyaBLEDeviceManager(self.hass, self._data)
+                await self._manager.build_cache()
+                return await self.async_step_login()
+            return await self.async_step_manual()
+
+        return self.async_show_form(
+            step_id="init",
+            data_schema=vol.Schema(
+                {
+                    vol.Required("setup_method", default="manual"): vol.In(
+                        {
+                            "manual": "Edit credentials manually",
+                            "cloud": "Fetch updated credentials from Tuya cloud",
+                        }
+                    ),
+                }
+            ),
+        )
 
     async def async_step_manual(
         self, user_input: dict[str, Any] | None = None
@@ -271,35 +297,41 @@ class TuyaBLEOptionsFlow(OptionsFlowWithConfigEntry):
         """Handle the Tuya IOT platform login step."""
         errors: dict[str, str] = {}
         placeholders: dict[str, Any] = {}
-        credentials: TuyaBLEDeviceCredentials | None = None
         address: str | None = self.config_entry.data.get(CONF_ADDRESS)
 
         if user_input is not None:
-            entry: TuyaBLEData | None = None
-            domain_data = self.hass.data.get(DOMAIN)
-            if domain_data:
-                entry = domain_data.get(self.config_entry.entry_id)
-            if entry:
-                login_data = await _try_login(
-                    entry.manager,
-                    user_input,
-                    errors,
-                    placeholders,
-                )
+            # Prefer a freshly-created manager (cloud switch path); fall back to
+            # the manager carried by the already-loaded entry.
+            manager = self._manager
+            if manager is None:
+                domain_data = self.hass.data.get(DOMAIN)
+                if domain_data:
+                    loaded = domain_data.get(self.config_entry.entry_id)
+                    if loaded:
+                        manager = loaded.manager
+
+            if manager is not None:
+                login_data = await _try_login(manager, user_input, errors, placeholders)
                 if login_data:
-                    credentials = await entry.manager.get_device_credentials(
+                    credentials = await manager.get_device_credentials(
                         address, True, True
                     )
                     if credentials:
                         return self.async_create_entry(
                             title=self.config_entry.title,
-                            data=entry.manager.data,
+                            data=manager.data,
                         )
                     errors["base"] = "device_not_registered"
+            else:
+                errors["base"] = "manager_unavailable"
 
         if user_input is None:
             user_input = {}
-            user_input.update(self.config_entry.options)
+            if self._data:
+                user_input.update(self._data)
+            else:
+                user_input.update(self.config_entry.options)
+            user_input.pop(CONF_PASSWORD, None)
 
         def_country_name = None
         if not user_input.get(CONF_COUNTRY_CODE):

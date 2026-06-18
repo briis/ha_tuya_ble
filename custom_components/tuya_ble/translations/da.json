@@ -284,9 +284,16 @@
         "error": {
             "device_not_registered": "Enheden er ikke registreret i Tuya cloud",
             "invalid_auth": "Ugyldig godkendelse",
-            "login_error": "Loginfejl ({code}): {msg}"
+            "login_error": "Loginfejl ({code}): {msg}",
+            "manager_unavailable": "Integrationen er ikke indlæst — genstart Home Assistant og prøv igen."
         },
         "step": {
+            "init": {
+                "data": {
+                    "setup_method": "Opdateringsmetode"
+                },
+                "description": "Hvordan vil du opdatere enhedens legitimationsoplysninger?"
+            },
             "login": {
                 "data": {
                     "access_id": "Tuya IoT Access ID",

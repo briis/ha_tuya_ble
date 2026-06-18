@@ -284,9 +284,16 @@
         "error": {
             "device_not_registered": "Das Gerät ist nicht in der Tuya-Cloud registriert",
             "invalid_auth": "Ungültige Authentifizierung",
-            "login_error": "Anmeldefehler ({code}): {msg}"
+            "login_error": "Anmeldefehler ({code}): {msg}",
+            "manager_unavailable": "Die Integration ist nicht geladen — starte Home Assistant neu und versuche es erneut."
         },
         "step": {
+            "init": {
+                "data": {
+                    "setup_method": "Aktualisierungsmethode"
+                },
+                "description": "Wie möchten Sie die Gerätedaten aktualisieren?"
+            },
             "login": {
                 "data": {
                     "access_id": "Tuya IoT Access ID",

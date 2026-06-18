@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from functools import partial
 from typing import TYPE_CHECKING, Any
 
@@ -20,6 +21,7 @@ from homeassistant.config_entries import (
 from homeassistant.const import (
     CONF_ADDRESS,
     CONF_COUNTRY_CODE,
+    CONF_DEVICE_ID,
     CONF_PASSWORD,
     CONF_USERNAME,
 )
@@ -32,7 +34,14 @@ from .const import (
     CONF_ACCESS_SECRET,
     CONF_APP_TYPE,
     CONF_AUTH_TYPE,
+    CONF_CATEGORY,
+    CONF_DEVICE_NAME,
     CONF_ENDPOINT,
+    CONF_LOCAL_KEY,
+    CONF_PRODUCT_ID,
+    CONF_PRODUCT_MODEL,
+    CONF_PRODUCT_NAME,
+    CONF_UUID,
     DOMAIN,
     SMARTLIFE_APP,
     TUYA_COUNTRIES,
@@ -48,6 +57,8 @@ if TYPE_CHECKING:
     from homeassistant.data_entry_flow import FlowHandler, FlowResult
 
 _LOGGER = logging.getLogger(__name__)
+
+_MAC_RE = re.compile(r"^([0-9A-F]{2}:){5}[0-9A-F]{2}$")
 
 
 async def _try_login(
@@ -169,7 +180,90 @@ class TuyaBLEOptionsFlow(OptionsFlowWithConfigEntry):
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         """Manage the options."""
+        if not self.config_entry.options.get(CONF_ACCESS_ID):
+            return await self.async_step_manual(user_input)
         return await self.async_step_login(user_input)
+
+    async def async_step_manual(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Handle editing credentials for a manually-added device."""
+        current = self.config_entry.options
+        address = self.config_entry.data.get(CONF_ADDRESS, "")
+
+        if user_input is not None:
+            device_name = user_input.get(CONF_DEVICE_NAME, "").strip() or address
+            return self.async_create_entry(
+                title=self.config_entry.title,
+                data={
+                    CONF_ADDRESS: address,
+                    CONF_UUID: user_input.get(CONF_UUID, "").strip(),
+                    CONF_LOCAL_KEY: user_input.get(CONF_LOCAL_KEY, "").strip(),
+                    CONF_DEVICE_ID: user_input.get(CONF_DEVICE_ID, "").strip(),
+                    CONF_CATEGORY: user_input.get(CONF_CATEGORY, "").strip(),
+                    CONF_PRODUCT_ID: user_input.get(CONF_PRODUCT_ID, "").strip(),
+                    CONF_DEVICE_NAME: device_name,
+                    CONF_PRODUCT_NAME: user_input.get(CONF_PRODUCT_NAME, "").strip(),
+                    CONF_PRODUCT_MODEL: user_input.get(CONF_PRODUCT_MODEL, "").strip(),
+                },
+            )
+
+        if user_input is None:
+            user_input = {}
+
+        return self.async_show_form(
+            step_id="manual",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        CONF_DEVICE_NAME,
+                        default=user_input.get(
+                            CONF_DEVICE_NAME, current.get(CONF_DEVICE_NAME, "")
+                        ),
+                    ): str,
+                    vol.Required(
+                        CONF_UUID,
+                        default=user_input.get(CONF_UUID, current.get(CONF_UUID, "")),
+                    ): str,
+                    vol.Required(
+                        CONF_LOCAL_KEY,
+                        default=user_input.get(
+                            CONF_LOCAL_KEY, current.get(CONF_LOCAL_KEY, "")
+                        ),
+                    ): str,
+                    vol.Required(
+                        CONF_DEVICE_ID,
+                        default=user_input.get(
+                            CONF_DEVICE_ID, current.get(CONF_DEVICE_ID, "")
+                        ),
+                    ): str,
+                    vol.Required(
+                        CONF_CATEGORY,
+                        default=user_input.get(
+                            CONF_CATEGORY, current.get(CONF_CATEGORY, "")
+                        ),
+                    ): str,
+                    vol.Required(
+                        CONF_PRODUCT_ID,
+                        default=user_input.get(
+                            CONF_PRODUCT_ID, current.get(CONF_PRODUCT_ID, "")
+                        ),
+                    ): str,
+                    vol.Optional(
+                        CONF_PRODUCT_NAME,
+                        default=user_input.get(
+                            CONF_PRODUCT_NAME, current.get(CONF_PRODUCT_NAME, "")
+                        ),
+                    ): str,
+                    vol.Optional(
+                        CONF_PRODUCT_MODEL,
+                        default=user_input.get(
+                            CONF_PRODUCT_MODEL, current.get(CONF_PRODUCT_MODEL, "")
+                        ),
+                    ): str,
+                }
+            ),
+        )
 
     async def async_step_login(
         self, user_input: dict[str, Any] | None = None
@@ -253,13 +347,112 @@ class TuyaBLEConfigFlow(ConfigFlow, domain=DOMAIN):
         return await self.async_step_login()
 
     async def async_step_user(
-        self, _user_input: dict[str, Any] | None = None
+        self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
-        """Handle the user step."""
-        if self._manager is None:
-            self._manager = HASSTuyaBLEDeviceManager(self.hass, self._data)
-        await self._manager.build_cache()
-        return await self.async_step_login()
+        """Handle the user step — choose cloud discovery or manual entry."""
+        if user_input is not None:
+            if user_input.get("setup_method") == "manual":
+                return await self.async_step_manual()
+            if self._manager is None:
+                self._manager = HASSTuyaBLEDeviceManager(self.hass, self._data)
+            await self._manager.build_cache()
+            return await self.async_step_login()
+
+        return self.async_show_form(
+            step_id="user",
+            data_schema=vol.Schema(
+                {
+                    vol.Required("setup_method", default="cloud"): vol.In(
+                        {
+                            "cloud": "Auto-discover via Bluetooth",
+                            "manual": "Enter device credentials manually",
+                        }
+                    ),
+                }
+            ),
+        )
+
+    async def async_step_manual(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Handle manual device credential entry."""
+        errors: dict[str, str] = {}
+
+        if user_input is not None:
+            address = user_input[CONF_ADDRESS].upper().strip()
+            if not _MAC_RE.match(address):
+                errors[CONF_ADDRESS] = "invalid_address"
+            else:
+                await self.async_set_unique_id(address, raise_on_progress=False)
+                self._abort_if_unique_id_configured()
+                device_name = user_input.get(CONF_DEVICE_NAME, "").strip() or address
+                return self.async_create_entry(
+                    title=device_name,
+                    data={CONF_ADDRESS: address},
+                    options={
+                        CONF_ADDRESS: address,
+                        CONF_UUID: user_input.get(CONF_UUID, "").strip(),
+                        CONF_LOCAL_KEY: user_input.get(CONF_LOCAL_KEY, "").strip(),
+                        CONF_DEVICE_ID: user_input.get(CONF_DEVICE_ID, "").strip(),
+                        CONF_CATEGORY: user_input.get(CONF_CATEGORY, "").strip(),
+                        CONF_PRODUCT_ID: user_input.get(CONF_PRODUCT_ID, "").strip(),
+                        CONF_DEVICE_NAME: device_name,
+                        CONF_PRODUCT_NAME: user_input.get(
+                            CONF_PRODUCT_NAME, ""
+                        ).strip(),
+                        CONF_PRODUCT_MODEL: user_input.get(
+                            CONF_PRODUCT_MODEL, ""
+                        ).strip(),
+                    },
+                )
+
+        if user_input is None:
+            user_input = {}
+
+        return self.async_show_form(
+            step_id="manual",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        CONF_ADDRESS,
+                        default=user_input.get(CONF_ADDRESS, ""),
+                    ): str,
+                    vol.Required(
+                        CONF_DEVICE_NAME,
+                        default=user_input.get(CONF_DEVICE_NAME, ""),
+                    ): str,
+                    vol.Required(
+                        CONF_UUID,
+                        default=user_input.get(CONF_UUID, ""),
+                    ): str,
+                    vol.Required(
+                        CONF_LOCAL_KEY,
+                        default=user_input.get(CONF_LOCAL_KEY, ""),
+                    ): str,
+                    vol.Required(
+                        CONF_DEVICE_ID,
+                        default=user_input.get(CONF_DEVICE_ID, ""),
+                    ): str,
+                    vol.Required(
+                        CONF_CATEGORY,
+                        default=user_input.get(CONF_CATEGORY, ""),
+                    ): str,
+                    vol.Required(
+                        CONF_PRODUCT_ID,
+                        default=user_input.get(CONF_PRODUCT_ID, ""),
+                    ): str,
+                    vol.Optional(
+                        CONF_PRODUCT_NAME,
+                        default=user_input.get(CONF_PRODUCT_NAME, ""),
+                    ): str,
+                    vol.Optional(
+                        CONF_PRODUCT_MODEL,
+                        default=user_input.get(CONF_PRODUCT_MODEL, ""),
+                    ): str,
+                }
+            ),
+            errors=errors,
+        )
 
     async def async_step_login(
         self, user_input: dict[str, Any] | None = None

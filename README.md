@@ -66,20 +66,83 @@ The integration is configured via the UI (Config Flow). No YAML is needed.
 
 1. Go to **Settings → Devices & Services → Add Integration**.
 2. Search for **Tuya BLE**.
-3. Enter your Tuya IoT Platform credentials:
-   - **Access ID** and **Access Secret** from your IoT project
-   - **App type** (Tuya Smart or Smart Life)
-   - **Region endpoint** (matching your account region)
-4. HA will scan for nearby BLE devices advertising the Tuya BLE service UUID and present matching devices for selection.
-5. Select your device and complete setup.
+3. Choose a setup method:
+   - **Auto-discover via Bluetooth** — HA scans for nearby devices and fetches credentials from Tuya cloud (requires a Tuya IoT Platform account).
+   - **Enter device credentials manually** — supply credentials directly, no cloud account needed during setup.
 
-### Getting Tuya IoT Platform credentials
+---
+
+### Option A — Auto-discover via Bluetooth
+
+1. Choose **Auto-discover via Bluetooth**.
+2. Enter your Tuya IoT Platform credentials (Access ID, Access Secret, account, region).
+3. HA presents all nearby Tuya BLE devices for selection.
+4. Select your device and complete setup.
+
+#### Getting Tuya IoT Platform credentials
 
 1. Log in at [developer.tuya.com](https://developer.tuya.com) and create a Cloud project.
 2. Link your devices by scanning the QR code in the Tuya Smart / Smart Life app under **Profile → Tap to Scan**.
 3. Copy the **Access ID** and **Access Secret** from your project's **Overview** tab.
 
 The integration calls the Tuya cloud API during initial setup (and when re-fetching credentials) but does **not** require cloud connectivity for day-to-day operation.
+
+---
+
+### Option B — Manual device entry (using tinytuya)
+
+If you already have the device credentials — for example exported from tinytuya — you can add devices without going through the cloud login step.
+
+#### 1. Export credentials with tinytuya
+
+[tinytuya](https://github.com/jasonacox/tinytuya) is a Python library that can scan your local network and export device credentials (including BLE devices registered in your Tuya account).
+
+```bash
+pip install tinytuya
+python -m tinytuya wizard
+```
+
+The wizard will ask for your Tuya IoT Platform credentials once, then write a `devices.json` file to the current directory. Each entry looks like this:
+
+```json
+{
+    "name": "Curtain 1",
+    "id": "bf4700saaq7lxjqm",
+    "key": "cgxnvGyVt3HHs|.D",
+    "mac": "DC:23:53:1A:92:92",
+    "uuid": "2ecf823f6c2842ab",
+    "category": "cl",
+    "product_name": "Cellular",
+    "product_id": "dy4dh1q0",
+    "model": "AM24B-0.6/34-ES-IB"
+}
+```
+
+#### 2. Add the device in Home Assistant
+
+1. Go to **Settings → Devices & Services → Add Integration → Tuya BLE**.
+2. Choose **Enter device credentials manually**.
+3. Fill in the form using the values from `devices.json`:
+
+| Form field | JSON field | Example |
+|---|---|---|
+| **MAC address** | `mac` | `DC:23:53:1A:92:92` |
+| **Device name** | `name` | `Curtain 1` |
+| **Device UUID** | `uuid` | `2ecf823f6c2842ab` |
+| **Local key** | `key` | `cgxnvGyVt3HHs|.D` |
+| **Device ID** | `id` | `bf4700saaq7lxjqm` |
+| **Category code** | `category` | `cl` |
+| **Product ID** | `product_id` | `dy4dh1q0` |
+| **Product name** *(optional)* | `product_name` | `Cellular` |
+| **Model** *(optional)* | `model` | `AM24B-0.6/34-ES-IB` |
+
+4. Click **Submit**. The device is added immediately — no cloud round-trip needed.
+
+> **Note:** The local key can rotate when you reset a device or re-pair it in the app. If a manually-added device stops responding, open its **Configure** dialog and update the **Local key** field.
+
+#### Updating credentials later
+
+Open the entry in **Settings → Devices & Services**, click **Configure**, and the manual credential form will be shown pre-filled with current values so you can update only what changed.
 
 ---
 

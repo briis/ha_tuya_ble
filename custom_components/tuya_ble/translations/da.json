@@ -1,0 +1,320 @@
+{
+    "config": {
+        "abort": {
+            "no_unconfigured_devices": "Ingen ikke-konfigurerede enheder fundet."
+        },
+        "error": {
+            "device_not_registered": "Enheden er ikke registreret i Tuya cloud",
+            "invalid_address": "Ugyldig MAC-adresse. Brug formatet AA:BB:CC:DD:EE:FF.",
+            "invalid_auth": "Ugyldig godkendelse",
+            "login_error": "Loginfejl ({code}): {msg}"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "user": {
+                "data": {
+                    "setup_method": "Opsætningsmetode"
+                },
+                "description": "Hvordan vil du tilføje din Tuya BLE-enhed?"
+            },
+            "device": {
+                "data": {
+                    "address": "Tuya BLE-enhed"
+                },
+                "description": "Vælg den Tuya BLE-enhed, der skal konfigureres. Enheden skal være registreret i cloud via mobilappen. Det anbefales at frakoble enheden fra en Tuya Bluetooth-gateway, hvis der er en."
+            },
+            "login": {
+                "data": {
+                    "access_id": "Tuya IoT Access ID",
+                    "access_secret": "Tuya IoT Access Secret",
+                    "country_code": "Land",
+                    "password": "Adgangskode",
+                    "username": "Konto"
+                },
+                "description": "Tuya BLE kræver, at krypteringsnøglen hentes fra Tuya cloud. De fleste enheder har kun brug for cloud-adgang én gang under opsætningen.\n\nSe [dokumentationen]({tuya_docs_url}) for Tuya-integrationen for at hente cloud-oplysningerne.\n\nIndtast dine Tuya-oplysninger."
+            },
+            "manual": {
+                "data": {
+                    "address": "MAC-adresse",
+                    "device_name": "Enhedsnavn",
+                    "uuid": "Enheds-UUID",
+                    "local_key": "Lokal nøgle",
+                    "device_id": "Enheds-ID",
+                    "category": "Kategorikode",
+                    "product_id": "Produkt-ID",
+                    "product_name": "Produktnavn",
+                    "product_model": "Model"
+                },
+                "data_description": {
+                    "address": "Bluetooth MAC-adresse i formatet AA:BB:CC:DD:EE:FF (feltet `mac` i en enhedseksport)",
+                    "uuid": "Enheds-UUID (feltet `uuid`)",
+                    "local_key": "Krypteringsnøgle til BLE-kommunikation (feltet `key`)",
+                    "device_id": "Tuya cloud-enheds-ID (feltet `id`)",
+                    "category": "Tuya-kategorikode, f.eks. `cl` for gardiner, `ms` for låse (feltet `category`)",
+                    "product_id": "Produkt-ID (feltet `product_id`)"
+                },
+                "description": "Indtast enhedsoplysningerne. Alle påkrævede felter findes i en Tuya-enhedseksport (f.eks. fra Tuya IoT-platformen eller et lokalt nøgleudtræktningsværktøj)."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "low_battery": {
+                "name": "Batteri"
+            }
+        },
+        "button": {
+            "push": {
+                "name": "Tryk"
+            },
+            "ble_unlock_check": {
+                "name": "Lås op"
+            }
+        },
+        "number": {
+            "brightness": {
+                "name": "Lysstyrke"
+            },
+            "carbon_dioxide_alarm_level": {
+                "name": "Alarmniveau"
+            },
+            "countdown_duration": {
+                "name": "Vandingstid"
+            },
+            "down_position": {
+                "name": "Nedre position"
+            },
+            "hold_time": {
+                "name": "Holdetid"
+            },
+            "program_idle_position": {
+                "name": "Hvilestilling"
+            },
+            "program_repeats_count": {
+                "name": "Gentagelsesantal"
+            },
+            "recommended_water_intake": {
+                "name": "Anbefalet vandindtag"
+            },
+            "reporting_period": {
+                "name": "Rapporteringsinterval"
+            },
+            "up_position": {
+                "name": "Øvre position"
+            },
+            "beep_volume": {
+                "name": "Låsestyrke"
+            },
+            "language": {
+                "name": "Låsesprog"
+            }
+        },
+        "select": {
+            "beep_volume": {
+                "name": "Låsestyrke"
+            },
+            "language": {
+                "name": "Låsesprog"
+            },
+            "fingerbot_mode": {
+                "name": "Tilstand",
+                "state": {
+                    "program": "Program",
+                    "push": "Tryk",
+                    "switch": "Kontakt"
+                }
+            },
+            "reminder_mode": {
+                "name": "Påmindelsestilstand",
+                "state": {
+                    "interval_reminder": "Interval",
+                    "schedule_reminder": "Tidsplan"
+                }
+            },
+            "temperature_unit": {
+                "name": "Temperaturenhed"
+            }
+        },
+        "sensor": {
+            "alarm_lock": {
+                "name": "Alarm"
+            },
+            "battery": {
+                "name": "Batteri"
+            },
+            "battery_charging": {
+                "name": "Batteriopladning",
+                "state": {
+                    "charged": "Opladet",
+                    "charging": "Oplader",
+                    "not_charging": "Oplader ikke"
+                }
+            },
+            "battery_state": {
+                "name": "Batteritilstand",
+                "state": {
+                    "high": "Høj",
+                    "low": "Lav",
+                    "normal": "Normal"
+                }
+            },
+            "carbon_dioxide": {
+                "name": "Kuldioxid"
+            },
+            "carbon_dioxide_alarm": {
+                "name": "Kuldioxidniveau",
+                "state": {
+                    "alarm": "Alarm",
+                    "normal": "Normal"
+                }
+            },
+            "humidity": {
+                "name": "Luftfugtighed"
+            },
+            "low_battery": {
+                "name": "Lavt batteri"
+            },
+            "moisture": {
+                "name": "Fugtighed"
+            },
+            "residual_electricity": {
+                "name": "Batteri"
+            },
+            "signal_strength": {
+                "name": "Signalstyrke"
+            },
+            "temperature": {
+                "name": "Temperatur"
+            },
+            "time_left": {
+                "name": "Resterende vandingstid"
+            },
+            "water_intake": {
+                "name": "Vandindtag"
+            },
+            "wrong_finger": {
+                "name": "Forkert fingeraftryk"
+            },
+            "wrong_password": {
+                "name": "Forkert adgangskode"
+            },
+            "unlock_fingerprint": {
+                "name": "Sidst brugte fingeraftryk"
+            },
+            "unlock_card": {
+                "name": "Sidst brugte kort"
+            },
+            "unlock_password": {
+                "name": "Sidst brugte adgangskode"
+            }
+        },
+        "switch": {
+            "antifreeze": {
+                "name": "Frostbeskyttelse"
+            },
+            "carbon_dioxide_alarm_switch": {
+                "name": "Alarm aktiveret"
+            },
+            "carbon_dioxide_severely_exceed_alarm": {
+                "name": "Stærkt overskridende alarm"
+            },
+            "child_lock": {
+                "name": "Børnesikring"
+            },
+            "lock_motor_state": {
+                "name": "Motortilstand"
+            },
+            "low_battery_alarm": {
+                "name": "Lavt batteri-alarm"
+            },
+            "manual_control": {
+                "name": "Manuel kontrol"
+            },
+            "program": {
+                "name": "Program"
+            },
+            "program_repeat_forever": {
+                "name": "Gentag altid"
+            },
+            "programming_mode": {
+                "name": "Programmeringstilstand"
+            },
+            "programming_switch": {
+                "name": "Programmeringsknap"
+            },
+            "reverse_positions": {
+                "name": "Omvendte positioner"
+            },
+            "switch": {
+                "name": "Kontakt"
+            },
+            "water_scale_proof": {
+                "name": "Antikalkbehandling"
+            },
+            "water_valve": {
+                "name": "Vandingsventil"
+            },
+            "window_check": {
+                "name": "Vindueskontrol"
+            }
+        },
+        "text": {
+            "program": {
+                "name": "Program: position[/tid];..."
+            }
+        },
+        "cover": {
+            "curtain": {
+                "name": "Gardin"
+            },
+            "curtain_2": {
+                "name": "Gardin 2"
+            },
+            "curtain_3": {
+                "name": "Gardin 3"
+            },
+            "blind": {
+                "name": "Persienne"
+            }
+        }
+    },
+    "options": {
+        "error": {
+            "device_not_registered": "Enheden er ikke registreret i Tuya cloud",
+            "invalid_auth": "Ugyldig godkendelse",
+            "login_error": "Loginfejl ({code}): {msg}"
+        },
+        "step": {
+            "login": {
+                "data": {
+                    "access_id": "Tuya IoT Access ID",
+                    "access_secret": "Tuya IoT Access Secret",
+                    "country_code": "Land",
+                    "password": "Adgangskode",
+                    "username": "Konto"
+                },
+                "description": "Se [dokumentationen]({tuya_docs_url}) for Tuya-integrationen for at hente cloud-oplysningerne.\n\nIndtast dine Tuya-oplysninger."
+            },
+            "manual": {
+                "data": {
+                    "device_name": "Enhedsnavn",
+                    "uuid": "Enheds-UUID",
+                    "local_key": "Lokal nøgle",
+                    "device_id": "Enheds-ID",
+                    "category": "Kategorikode",
+                    "product_id": "Produkt-ID",
+                    "product_name": "Produktnavn",
+                    "product_model": "Model"
+                },
+                "data_description": {
+                    "uuid": "Enheds-UUID (feltet `uuid`)",
+                    "local_key": "Krypteringsnøgle til BLE-kommunikation (feltet `key`)",
+                    "device_id": "Tuya cloud-enheds-ID (feltet `id`)",
+                    "category": "Tuya-kategorikode, f.eks. `cl` for gardiner, `ms` for låse (feltet `category`)",
+                    "product_id": "Produkt-ID (feltet `product_id`)"
+                },
+                "description": "Opdater enhedsoplysningerne. MAC-adressen kan ikke ændres."
+            }
+        }
+    }
+}

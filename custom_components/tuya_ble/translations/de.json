@@ -1,0 +1,320 @@
+{
+    "config": {
+        "abort": {
+            "no_unconfigured_devices": "Keine unkonfigurierten Geräte gefunden."
+        },
+        "error": {
+            "device_not_registered": "Das Gerät ist nicht in der Tuya-Cloud registriert",
+            "invalid_address": "Ungültige MAC-Adresse. Verwenden Sie das Format AA:BB:CC:DD:EE:FF.",
+            "invalid_auth": "Ungültige Authentifizierung",
+            "login_error": "Anmeldefehler ({code}): {msg}"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "user": {
+                "data": {
+                    "setup_method": "Einrichtungsmethode"
+                },
+                "description": "Wie möchten Sie Ihr Tuya BLE-Gerät hinzufügen?"
+            },
+            "device": {
+                "data": {
+                    "address": "Tuya BLE-Gerät"
+                },
+                "description": "Wählen Sie das einzurichtende Tuya BLE-Gerät aus. Das Gerät muss über die Mobile App in der Cloud registriert sein. Es wird empfohlen, das Gerät von einem Tuya Bluetooth-Gateway zu trennen, falls vorhanden."
+            },
+            "login": {
+                "data": {
+                    "access_id": "Tuya IoT Access ID",
+                    "access_secret": "Tuya IoT Access Secret",
+                    "country_code": "Land",
+                    "password": "Passwort",
+                    "username": "Konto"
+                },
+                "description": "Tuya BLE benötigt den Verschlüsselungsschlüssel aus der Tuya-Cloud. Die meisten Geräte benötigen den Cloud-Zugriff nur einmal bei der Einrichtung.\n\nSiehe [Dokumentation]({tuya_docs_url}) der Tuya-Integration zum Abrufen der Cloud-Anmeldedaten.\n\nGeben Sie Ihre Tuya-Anmeldedaten ein."
+            },
+            "manual": {
+                "data": {
+                    "address": "MAC-Adresse",
+                    "device_name": "Gerätename",
+                    "uuid": "Geräte-UUID",
+                    "local_key": "Lokaler Schlüssel",
+                    "device_id": "Geräte-ID",
+                    "category": "Kategoriekode",
+                    "product_id": "Produkt-ID",
+                    "product_name": "Produktname",
+                    "product_model": "Modell"
+                },
+                "data_description": {
+                    "address": "Bluetooth-MAC-Adresse im Format AA:BB:CC:DD:EE:FF (Feld `mac` im Geräteexport)",
+                    "uuid": "Geräte-UUID (Feld `uuid`)",
+                    "local_key": "Verschlüsselungsschlüssel für die BLE-Kommunikation (Feld `key`)",
+                    "device_id": "Tuya-Cloud-Geräte-ID (Feld `id`)",
+                    "category": "Tuya-Kategoriekode, z. B. `cl` für Vorhänge, `ms` für Schlösser (Feld `category`)",
+                    "product_id": "Produkt-ID (Feld `product_id`)"
+                },
+                "description": "Geben Sie die Gerätedaten ein. Alle erforderlichen Felder sind in einem Tuya-Geräteexport enthalten (z. B. von der Tuya IoT-Plattform oder einem lokalen Schlüsselextraktionstool)."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "low_battery": {
+                "name": "Batterie"
+            }
+        },
+        "button": {
+            "push": {
+                "name": "Drücken"
+            },
+            "ble_unlock_check": {
+                "name": "Entsperren"
+            }
+        },
+        "number": {
+            "brightness": {
+                "name": "Helligkeit"
+            },
+            "carbon_dioxide_alarm_level": {
+                "name": "Alarmstufe"
+            },
+            "countdown_duration": {
+                "name": "Bewässerungsdauer"
+            },
+            "down_position": {
+                "name": "Untere Position"
+            },
+            "hold_time": {
+                "name": "Haltezeit"
+            },
+            "program_idle_position": {
+                "name": "Ruheposition"
+            },
+            "program_repeats_count": {
+                "name": "Wiederholungsanzahl"
+            },
+            "recommended_water_intake": {
+                "name": "Empfohlene Wasseraufnahme"
+            },
+            "reporting_period": {
+                "name": "Berichtszeitraum"
+            },
+            "up_position": {
+                "name": "Obere Position"
+            },
+            "beep_volume": {
+                "name": "Schlossvolumen"
+            },
+            "language": {
+                "name": "Schlosssprache"
+            }
+        },
+        "select": {
+            "beep_volume": {
+                "name": "Schlossvolumen"
+            },
+            "language": {
+                "name": "Schlosssprache"
+            },
+            "fingerbot_mode": {
+                "name": "Modus",
+                "state": {
+                    "program": "Programm",
+                    "push": "Drücken",
+                    "switch": "Schalter"
+                }
+            },
+            "reminder_mode": {
+                "name": "Erinnerungsmodus",
+                "state": {
+                    "interval_reminder": "Intervall",
+                    "schedule_reminder": "Zeitplan"
+                }
+            },
+            "temperature_unit": {
+                "name": "Temperatureinheit"
+            }
+        },
+        "sensor": {
+            "alarm_lock": {
+                "name": "Alarm"
+            },
+            "battery": {
+                "name": "Batterie"
+            },
+            "battery_charging": {
+                "name": "Batterieladung",
+                "state": {
+                    "charged": "Geladen",
+                    "charging": "Lädt",
+                    "not_charging": "Lädt nicht"
+                }
+            },
+            "battery_state": {
+                "name": "Batteriestatus",
+                "state": {
+                    "high": "Hoch",
+                    "low": "Niedrig",
+                    "normal": "Normal"
+                }
+            },
+            "carbon_dioxide": {
+                "name": "Kohlendioxid"
+            },
+            "carbon_dioxide_alarm": {
+                "name": "Kohlendioxidniveau",
+                "state": {
+                    "alarm": "Alarm",
+                    "normal": "Normal"
+                }
+            },
+            "humidity": {
+                "name": "Luftfeuchtigkeit"
+            },
+            "low_battery": {
+                "name": "Niedriger Akkustand"
+            },
+            "moisture": {
+                "name": "Feuchtigkeit"
+            },
+            "residual_electricity": {
+                "name": "Batterie"
+            },
+            "signal_strength": {
+                "name": "Signalstärke"
+            },
+            "temperature": {
+                "name": "Temperatur"
+            },
+            "time_left": {
+                "name": "Verbleibende Bewässerungszeit"
+            },
+            "water_intake": {
+                "name": "Wasseraufnahme"
+            },
+            "wrong_finger": {
+                "name": "Falscher Fingerabdruck"
+            },
+            "wrong_password": {
+                "name": "Falsches Passwort"
+            },
+            "unlock_fingerprint": {
+                "name": "Zuletzt verwendeter Fingerabdruck"
+            },
+            "unlock_card": {
+                "name": "Zuletzt verwendete Karte"
+            },
+            "unlock_password": {
+                "name": "Zuletzt verwendetes Passwort"
+            }
+        },
+        "switch": {
+            "antifreeze": {
+                "name": "Frostschutz"
+            },
+            "carbon_dioxide_alarm_switch": {
+                "name": "Alarm aktiviert"
+            },
+            "carbon_dioxide_severely_exceed_alarm": {
+                "name": "Stark überschreitender Alarm"
+            },
+            "child_lock": {
+                "name": "Kindersicherung"
+            },
+            "lock_motor_state": {
+                "name": "Motorstatus"
+            },
+            "low_battery_alarm": {
+                "name": "Niedrigbatteriewarnung"
+            },
+            "manual_control": {
+                "name": "Manuelle Steuerung"
+            },
+            "program": {
+                "name": "Programm"
+            },
+            "program_repeat_forever": {
+                "name": "Dauerhaft wiederholen"
+            },
+            "programming_mode": {
+                "name": "Programmiermodus"
+            },
+            "programming_switch": {
+                "name": "Programmierschalter"
+            },
+            "reverse_positions": {
+                "name": "Positionen umkehren"
+            },
+            "switch": {
+                "name": "Schalter"
+            },
+            "water_scale_proof": {
+                "name": "Entkalkungsschutz"
+            },
+            "water_valve": {
+                "name": "Bewässerungsventil"
+            },
+            "window_check": {
+                "name": "Fensterkontrolle"
+            }
+        },
+        "text": {
+            "program": {
+                "name": "Programm: Position[/Zeit];..."
+            }
+        },
+        "cover": {
+            "curtain": {
+                "name": "Vorhang"
+            },
+            "curtain_2": {
+                "name": "Vorhang 2"
+            },
+            "curtain_3": {
+                "name": "Vorhang 3"
+            },
+            "blind": {
+                "name": "Jalousie"
+            }
+        }
+    },
+    "options": {
+        "error": {
+            "device_not_registered": "Das Gerät ist nicht in der Tuya-Cloud registriert",
+            "invalid_auth": "Ungültige Authentifizierung",
+            "login_error": "Anmeldefehler ({code}): {msg}"
+        },
+        "step": {
+            "login": {
+                "data": {
+                    "access_id": "Tuya IoT Access ID",
+                    "access_secret": "Tuya IoT Access Secret",
+                    "country_code": "Land",
+                    "password": "Passwort",
+                    "username": "Konto"
+                },
+                "description": "Siehe [Dokumentation]({tuya_docs_url}) der Tuya-Integration zum Abrufen der Cloud-Anmeldedaten.\n\nGeben Sie Ihre Tuya-Anmeldedaten ein."
+            },
+            "manual": {
+                "data": {
+                    "device_name": "Gerätename",
+                    "uuid": "Geräte-UUID",
+                    "local_key": "Lokaler Schlüssel",
+                    "device_id": "Geräte-ID",
+                    "category": "Kategoriekode",
+                    "product_id": "Produkt-ID",
+                    "product_name": "Produktname",
+                    "product_model": "Modell"
+                },
+                "data_description": {
+                    "uuid": "Geräte-UUID (Feld `uuid`)",
+                    "local_key": "Verschlüsselungsschlüssel für die BLE-Kommunikation (Feld `key`)",
+                    "device_id": "Tuya-Cloud-Geräte-ID (Feld `id`)",
+                    "category": "Tuya-Kategoriekode, z. B. `cl` für Vorhänge, `ms` für Schlösser (Feld `category`)",
+                    "product_id": "Produkt-ID (Feld `product_id`)"
+                },
+                "description": "Gerätedaten aktualisieren. Die MAC-Adresse kann nicht geändert werden."
+            }
+        }
+    }
+}

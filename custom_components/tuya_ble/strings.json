@@ -5,11 +5,18 @@
     },
     "error": {
       "device_not_registered": "Device is not registered in Tuya cloud",
+      "invalid_address": "Invalid MAC address. Use the format AA:BB:CC:DD:EE:FF.",
       "invalid_auth": "[%key:common::config_flow::error::invalid_auth%]",
       "login_error": "Login error ({code}): {msg}"
     },
     "flow_title": "{name}",
     "step": {
+      "user": {
+        "data": {
+          "setup_method": "Setup method"
+        },
+        "description": "How would you like to add your Tuya BLE device?"
+      },
       "device": {
         "data": {
           "address": "Tuya BLE device"
@@ -25,6 +32,28 @@
           "username": "Account"
         },
         "description": "Tuya BLE requires obtaining encryption key from Tuya cloud. Almost all devices only need to access the cloud once during setup.\n\nRefer to [documentation]({tuya_docs_url}) of Tuya integration to retrieve the cloud credentials.\n\nEnter your Tuya credentials."
+      },
+      "manual": {
+        "data": {
+          "address": "MAC address",
+          "device_name": "Device name",
+          "uuid": "Device UUID",
+          "local_key": "Local key",
+          "device_id": "Device ID",
+          "category": "Category code",
+          "product_id": "Product ID",
+          "product_name": "Product name",
+          "product_model": "Model"
+        },
+        "data_description": {
+          "address": "Bluetooth MAC address in AA:BB:CC:DD:EE:FF format (the `mac` field in a device export)",
+          "uuid": "Device UUID (`uuid` field)",
+          "local_key": "Encryption key used for BLE communication (`key` field)",
+          "device_id": "Tuya cloud device ID (`id` field)",
+          "category": "Tuya category code, e.g. `cl` for curtains, `ms` for locks (`category` field)",
+          "product_id": "Product ID (`product_id` field)"
+        },
+        "description": "Enter the device credentials. All required fields can be found in a Tuya device export (e.g. from the Tuya IoT platform or a local key extractor tool)."
       }
     }
   },
@@ -262,6 +291,26 @@
           "username": "Account"
         },
         "description": "Refer to [documentation]({tuya_docs_url}) of Tuya integration to retrieve the cloud credentials.\n\nEnter your Tuya credentials."
+      },
+      "manual": {
+        "data": {
+          "device_name": "[%key:config::step::manual::data::device_name%]",
+          "uuid": "[%key:config::step::manual::data::uuid%]",
+          "local_key": "[%key:config::step::manual::data::local_key%]",
+          "device_id": "[%key:config::step::manual::data::device_id%]",
+          "category": "[%key:config::step::manual::data::category%]",
+          "product_id": "[%key:config::step::manual::data::product_id%]",
+          "product_name": "[%key:config::step::manual::data::product_name%]",
+          "product_model": "[%key:config::step::manual::data::product_model%]"
+        },
+        "data_description": {
+          "uuid": "[%key:config::step::manual::data_description::uuid%]",
+          "local_key": "[%key:config::step::manual::data_description::local_key%]",
+          "device_id": "[%key:config::step::manual::data_description::device_id%]",
+          "category": "[%key:config::step::manual::data_description::category%]",
+          "product_id": "[%key:config::step::manual::data_description::product_id%]"
+        },
+        "description": "Update the device credentials. The MAC address cannot be changed."
       }
     }
   }

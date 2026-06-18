@@ -51,7 +51,9 @@
                     "local_key": "Verschlüsselungsschlüssel für die BLE-Kommunikation (Feld `key`)",
                     "device_id": "Tuya-Cloud-Geräte-ID (Feld `id`)",
                     "category": "Tuya-Kategoriekode, z. B. `cl` für Vorhänge, `ms` für Schlösser (Feld `category`)",
-                    "product_id": "Produkt-ID (Feld `product_id`)"
+                    "product_id": "Produkt-ID (Feld `product_id`)",
+                    "product_name": "Optional. Produkt- oder Handelsname (Feld `product_name`)",
+                    "product_model": "Optional. Hardwaremodellnummer (Feld `model`)"
                 },
                 "description": "Geben Sie die Gerätedaten ein. Alle erforderlichen Felder sind in einem Tuya-Geräteexport enthalten (z. B. von der Tuya IoT-Plattform oder einem lokalen Schlüsselextraktionstool)."
             }
@@ -311,7 +313,9 @@
                     "local_key": "Verschlüsselungsschlüssel für die BLE-Kommunikation (Feld `key`)",
                     "device_id": "Tuya-Cloud-Geräte-ID (Feld `id`)",
                     "category": "Tuya-Kategoriekode, z. B. `cl` für Vorhänge, `ms` für Schlösser (Feld `category`)",
-                    "product_id": "Produkt-ID (Feld `product_id`)"
+                    "product_id": "Produkt-ID (Feld `product_id`)",
+                    "product_name": "Optional. Produkt- oder Handelsname (Feld `product_name`)",
+                    "product_model": "Optional. Hardwaremodellnummer (Feld `model`)"
                 },
                 "description": "Gerätedaten aktualisieren. Die MAC-Adresse kann nicht geändert werden."
             }

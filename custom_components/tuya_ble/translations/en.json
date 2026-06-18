@@ -51,7 +51,9 @@
                     "local_key": "Encryption key used for BLE communication (`key` field)",
                     "device_id": "Tuya cloud device ID (`id` field)",
                     "category": "Tuya category code, e.g. `cl` for curtains, `ms` for locks (`category` field)",
-                    "product_id": "Product ID (`product_id` field)"
+                    "product_id": "Product ID (`product_id` field)",
+                    "product_name": "Optional. Product or commercial name (`product_name` field)",
+                    "product_model": "Optional. Hardware model number (`model` field)"
                 },
                 "description": "Enter the device credentials. All required fields can be found in a Tuya device export (e.g. from the Tuya IoT platform or a local key extractor tool)."
             }
@@ -308,7 +310,9 @@
                     "local_key": "Encryption key used for BLE communication (`key` field)",
                     "device_id": "Tuya cloud device ID (`id` field)",
                     "category": "Tuya category code, e.g. `cl` for curtains, `ms` for locks (`category` field)",
-                    "product_id": "Product ID (`product_id` field)"
+                    "product_id": "Product ID (`product_id` field)",
+                    "product_name": "Optional. Product or commercial name (`product_name` field)",
+                    "product_model": "Optional. Hardware model number (`model` field)"
                 },
                 "description": "Update the device credentials. The MAC address cannot be changed."
             }

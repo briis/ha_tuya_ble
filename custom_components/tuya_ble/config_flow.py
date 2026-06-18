@@ -485,6 +485,7 @@ class TuyaBLEConfigFlow(ConfigFlow, domain=DOMAIN):
                 self._manager.get_login_from_cache()
             if self._data is not None and len(self._data) > 0:
                 user_input.update(self._data)
+                user_input.pop(CONF_PASSWORD, None)
 
         def_country_name = None
         if not user_input.get(CONF_COUNTRY_CODE):

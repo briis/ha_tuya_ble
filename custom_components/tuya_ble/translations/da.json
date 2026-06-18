@@ -51,7 +51,9 @@
                     "local_key": "Krypteringsnøgle til BLE-kommunikation (feltet `key`)",
                     "device_id": "Tuya cloud-enheds-ID (feltet `id`)",
                     "category": "Tuya-kategorikode, f.eks. `cl` for gardiner, `ms` for låse (feltet `category`)",
-                    "product_id": "Produkt-ID (feltet `product_id`)"
+                    "product_id": "Produkt-ID (feltet `product_id`)",
+                    "product_name": "Valgfri. Produkt- eller handelsnavn (feltet `product_name`)",
+                    "product_model": "Valgfri. Hardwaremodelnummer (feltet `model`)"
                 },
                 "description": "Indtast enhedsoplysningerne. Alle påkrævede felter findes i en Tuya-enhedseksport (f.eks. fra Tuya IoT-platformen eller et lokalt nøgleudtræktningsværktøj)."
             }
@@ -311,7 +313,9 @@
                     "local_key": "Krypteringsnøgle til BLE-kommunikation (feltet `key`)",
                     "device_id": "Tuya cloud-enheds-ID (feltet `id`)",
                     "category": "Tuya-kategorikode, f.eks. `cl` for gardiner, `ms` for låse (feltet `category`)",
-                    "product_id": "Produkt-ID (feltet `product_id`)"
+                    "product_id": "Produkt-ID (feltet `product_id`)",
+                    "product_name": "Valgfri. Produkt- eller handelsnavn (feltet `product_name`)",
+                    "product_model": "Valgfri. Hardwaremodelnummer (feltet `model`)"
                 },
                 "description": "Opdater enhedsoplysningerne. MAC-adressen kan ikke ændres."
             }

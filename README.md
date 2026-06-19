@@ -1,4 +1,4 @@
-# Tuya BLE — Home Assistant Integration
+# ![logo](icon.png) Tuya BLE — Home Assistant Integration
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
 [![GitHub Release](https://img.shields.io/github/release/briis/ha_tuya_ble.svg)](https://github.com/briis/ha_tuya_ble/releases)

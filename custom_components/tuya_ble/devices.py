@@ -451,6 +451,9 @@ devices_database: dict[str, TuyaBLECategoryInfo] = {
             "ojzlzzsw": TuyaBLEProductInfo(  # device product_id
                 name="Soil moisture sensor",
             ),
+            "zl60pxvh": TuyaBLEProductInfo(  # device product_id
+                name="SGS08 Soil moisture sensor",
+            ),
         },
     ),
     "znhsb": TuyaBLECategoryInfo(

@@ -25,6 +25,7 @@ Local Bluetooth (BLE) support for Tuya devices in Home Assistant. Device credent
 | Irrigation Computer | `ggq` | Switch (water valve), Sensor (battery, time remaining) |
 | Valve Controller | `sfkzq` | Switch (water valve), Sensor (battery, time remaining) |
 | Strip Lights (LGB102, generic) | `dd` | Light (brightness, color temperature, RGB) |
+| Lamomo RGB Neon Strip Light (`0qgrjxum`, FD50) | `dd` | Light (on/off, RGB, brightness via HSV) |
 | Curtain motor | `cl` | Cover (open/close/stop/set position, curtain & blind) |
 | Curtain Switch module | `clkg` | Cover (open/close/stop/set position) |
 | Curtain Robot | `jdcljqr` | Cover (open/close/stop/set position) |
@@ -63,6 +64,40 @@ All devices also expose a **Signal Strength (dBm)** diagnostic sensor (disabled 
 ## Configuration
 
 The integration is configured via the UI (Config Flow). No YAML is needed.
+
+### Lamomo FD50 strip (`0qgrjxum`)
+
+This product uses different GATT characteristics and Tuya V4 datapoint framing
+from the usual A201 devices. A product-specific transport is selected from the
+resolved device credentials; other product IDs retain the existing transport.
+
+Use **manual device entry** with the strip's actual Bluetooth advertising address
+and its existing Tuya credentials. The address displayed in Smart Life can differ
+from the advertised address. FD50 automatic discovery is not added by this change;
+do not reset or unbind an already paired strip to configure this integration.
+Credentials are private: never post local keys, UUIDs or device IDs in issues.
+
+Tested on one Lamomo strip with Tuya BLE protocol 4.4 / firmware 1.1, Home Assistant
+2026.9.4, Linux BlueZ and a CSR8510 USB adapter passed through to an HAOS VM:
+
+- Power on/off, RGB color and color brightness, with fresh device readback.
+- Home Assistant light controls, integration reload and reconnect/readback.
+- Serialized commands prevent power readback from overwriting a queued color.
+
+Brightness uses the HSV value component, not an independent white-light channel.
+White color temperature, effects/music configuration and other FD50 products are
+not supported by this adapter. ESPHome Bluetooth proxies and other firmware have
+not been tested. Smart Life may hold the single BLE connection: fully close the
+phone app if Home Assistant cannot connect.
+
+The tests use isolated dependency fakes for protocol/lifecycle and setup
+regressions; they are not a substitute for testing additional physical devices.
+
+Run them without Home Assistant dependencies using:
+
+```bash
+python3.14 -m unittest discover -s tests
+```
 
 1. Go to **Settings → Devices & Services → Add Integration**.
 2. Search for **Tuya BLE**.

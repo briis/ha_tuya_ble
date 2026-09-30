@@ -112,6 +112,15 @@ class TuyaLightEntityDescription(TuyaBLEEntityDescription, LightEntityDescriptio
 # Values are added (replace for same DP) to what we get from the cloud
 ProductsMapping: dict[str, dict[str, tuple[TuyaLightEntityDescription, ...]]] = {
     "dd": {
+        "0qgrjxum": (
+            TuyaLightEntityDescription(
+                key=DPCode.SWITCH_LED,
+                name=None,
+                color_mode=DPCode.WORK_MODE,
+                color_data=DPCode.COLOUR_DATA,
+                default_color_type=DEFAULT_COLOR_TYPE_DATA_V2,
+            ),
+        ),
         "nvfrtxlq": (
             TuyaLightEntityDescription(
                 key="",  # just override the category description from these set keys
@@ -127,7 +136,7 @@ ProductsMapping: dict[str, dict[str, tuple[TuyaLightEntityDescription, ...]]] = 
                     }
                 },
             ),
-        )
+        ),
     }
 }
 

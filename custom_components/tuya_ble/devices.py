@@ -253,6 +253,8 @@ class TuyaBLECoordinator(DataUpdateCoordinator[None]):
         device.register_connected_callback(self._async_handle_connect)
         device.register_callback(self._async_handle_update)
         device.register_disconnected_callback(self._async_handle_disconnect)
+        if register_local := getattr(device, "register_local_update_callback", None):
+            register_local(self._async_handle_local_update)
 
     @property
     def connected(self) -> bool:
@@ -262,9 +264,15 @@ class TuyaBLECoordinator(DataUpdateCoordinator[None]):
     def _async_handle_connect(self) -> None:
         if self._unsub_disconnect is not None:
             self._unsub_disconnect()
+            self._unsub_disconnect = None
         if self._disconnected:
             self._disconnected = False
             self.async_update_listeners()
+
+    @callback
+    def _async_handle_local_update(self, _updates: list[TuyaBLEDataPoint]) -> None:
+        """Notify cached rollback without marking the device connected."""
+        self.async_update_listeners()
 
     @callback
     def _async_handle_update(self, updates: list[TuyaBLEDataPoint]) -> None:
@@ -479,6 +487,10 @@ devices_database: dict[str, TuyaBLECategoryInfo] = {
     ),
     "dd": TuyaBLECategoryInfo(
         products={
+            "0qgrjxum": TuyaBLEProductInfo(
+                name="RGB Neon Strip Light",
+                manufacturer="Lamomo",
+            ),
             **dict.fromkeys(
                 [
                     "nvfrtxlq",
